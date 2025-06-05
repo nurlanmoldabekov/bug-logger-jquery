@@ -1,11 +1,13 @@
 package com.bet99.bet99test.controller;
 
-import com.bet99.bet99test.entity.Bug;
+import com.bet99.bet99test.entity.BugEntity;
 import com.bet99.bet99test.entity.enums.Severity;
 import com.bet99.bet99test.entity.enums.Status;
 import com.bet99.bet99test.service.BugService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,23 +15,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class BugController {
 
-
     private final BugService bugService;
 
     @GetMapping("/")
     public String home() {
-        return "bug"; // this resolves to /WEB-INF/views/bugs.jsp
+        return "bug";
     }
 
     @ResponseBody
     @GetMapping("/bugs")
-    public Page<Bug> getBugs(
+    public ResponseEntity<Page<BugEntity>> getBugs(
             @RequestParam(required = false) String query,
             @RequestParam(required = false) Severity severity,
             @RequestParam(required = false) Status status,
@@ -37,12 +37,12 @@ public class BugController {
             @RequestParam(required = false, defaultValue = "5") Integer pageSize,
             @RequestParam(required = false, defaultValue = "id") String sortBy,
             @RequestParam(required = false, defaultValue = "ASC") String sortDirection) {
-        return bugService.findAll(query, severity, status, page, pageSize, sortBy, sortDirection);
+        return ResponseEntity.ok(bugService.findAll(query, severity, status, page, pageSize, sortBy, sortDirection));
     }
 
     @ResponseBody
     @PostMapping("/bugs")
-    public Bug saveBug(@RequestBody Bug bug) {
-        return bugService.save(bug);
+    public ResponseEntity<BugEntity> saveBug(@Valid @RequestBody BugEntity bugEntity) {
+        return ResponseEntity.ok(bugService.save(bugEntity));
     }
 }

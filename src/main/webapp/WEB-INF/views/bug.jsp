@@ -23,11 +23,13 @@
             <form id="bugForm" class="card p-3 shadow-sm">
                 <div class="mb-3">
                     <label for="bugTitle" class="form-label">Title</label>
-                    <input type="text" class="form-control" id="bugTitle" name="bugTitle" placeholder="Enter bug title">
+                    <input type="text" class="form-control" id="bugTitle" name="bugTitle" placeholder="Enter bugEntity title">
+                    <div id="titleError" class="text-danger"></div>
                 </div>
                 <div class="mb-3">
                     <label for="description" class="form-label">Description</label>
                     <input type="text" class="form-control" id="description" name="description" placeholder="Enter description">
+                    <div id="descriptionError" class="text-danger"></div>
                 </div>
                 <div class="mb-3">
                     <label for="severity" class="form-label">Severity</label>
@@ -133,6 +135,29 @@
 
         $("#bugForm").submit(function (e) {
             e.preventDefault();
+
+            $("#titleError").text("");
+            $("#descriptionError").text("");
+
+            // Validation
+            let title = $("#bugTitle").val();
+            let description = $("#description").val();
+            let hasErrors = false;
+
+            if (title.length < 10) {
+                $("#titleError").text("Title must be at least 10 characters long.");
+                hasErrors = true;
+            }
+            if (description.length < 20) {
+                $("#descriptionError").text("Description must be at least 20 characters long.");
+                hasErrors = true;
+            }
+
+            if (hasErrors) {
+                return;
+            }
+
+            // Submit the form if validation passes
             let data = {};
             $(this).serializeArray().forEach(function (x) {
                 data[x.name] = x.value;
@@ -184,13 +209,13 @@
                 '<td>{{status}}</td>' +
                 '</tr>';
 
-            data.content.forEach(bug => {
+            data.content.forEach(bugEntity => {
                 rows += row.compose({
-                    'id': bug.id,
-                    'bugTitle': bug.bugTitle,
-                    'description': bug.description,
-                    'severity': bug.severity,
-                    'status': bug.status
+                    'id': bugEntity.id,
+                    'bugTitle': bugEntity.bugTitle,
+                    'description': bugEntity.description,
+                    'severity': bugEntity.severity,
+                    'status': bugEntity.status
                 });
             });
 
