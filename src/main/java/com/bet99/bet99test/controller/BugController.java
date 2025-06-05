@@ -5,8 +5,13 @@ import com.bet99.bet99test.entity.enums.Severity;
 import com.bet99.bet99test.entity.enums.Status;
 import com.bet99.bet99test.service.BugService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -24,7 +29,7 @@ public class BugController {
 
     @ResponseBody
     @GetMapping("/bugs")
-    public List<Bug> getBugs(
+    public Page<Bug> getBugs(
             @RequestParam(required = false) String query,
             @RequestParam(required = false) Severity severity,
             @RequestParam(required = false) Status status,

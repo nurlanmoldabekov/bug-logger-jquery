@@ -2,12 +2,12 @@
 <html>
 <head>
     <title>Bug Tracker</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.4.0.js"
+            integrity="sha256-DYZMCC8HTC+QDr5QNaIcfR7VSPtcISykd+6eSmBW5qo="
+            crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-            crossorigin="anonymous"></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -101,12 +101,24 @@
                 </thead>
                 <tbody></tbody>
             </table>
+            <div class="d-flex justify-content-center mt-3">
+                <nav>
+                    <ul id="pagination" class="pagination">
+                        <li class="page-item">
+                            <button class="page-link secondary" onclick="loadBugs(currentPage - 1)" id="prevPage">Previous</button>
+                        </li>
+                        <li class="page-item">
+                            <button class="page-link secondary" onclick="loadBugs(currentPage + 1)" id="nextPage">Next</button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-    //Compose template string
+
     String.prototype.compose = (function () {
         var re = /\{{(.+?)\}}/g;
         return function (o) {
@@ -138,13 +150,16 @@
         });
     });
 
-    function loadBugs() {
+    let currentPage = 0;
+
+    function loadBugs(page = 0) {
+        currentPage = page;
         let query = $("#queryFilter").val();
         let severity = $("#severityFilter").val();
         let status = $("#statusFilter").val();
-        let url = "/bugs";
+        let url = "/bugs?page=" + page + "&pageSize=3";
 
-        // Build query string
+
         let queryParams = [];
         if (query) {
             queryParams.push("query=" + encodeURIComponent(query));
@@ -156,7 +171,7 @@
             queryParams.push("status=" + encodeURIComponent(status));
         }
         if (queryParams.length > 0) {
-            url += "?" + queryParams.join("&");
+            url += "&" + queryParams.join("&");
         }
 
         $.get(url, function (data) {
@@ -169,7 +184,7 @@
                 '<td>{{status}}</td>' +
                 '</tr>';
 
-            data.forEach(bug => {
+            data.content.forEach(bug => {
                 rows += row.compose({
                     'id': bug.id,
                     'bugTitle': bug.bugTitle,
@@ -180,6 +195,23 @@
             });
 
             $("#bugTable tbody").empty().append(rows);
+
+
+            let paginationLinks = "";
+            for (let i = 0; i < data.totalPages; i++) {
+                paginationLinks += "<li class=\"page-item" + (i === data.number ? ' active' : '') + "\">" +
+                    "<button class=\"page-link\" onclick=\"loadBugs(" + i + ")\">" + (i + 1) + "</button>" +
+                    "</li>";
+            }
+
+            $("#pagination").empty();
+
+            $("#pagination").append("<li class=\"page-item\"> <button class=\"page-link secondary\" onclick=\"loadBugs(currentPage - 1)\" id=\"prevPage\">Previous</button> </li>");
+            $("#pagination").append(paginationLinks);
+            $("#pagination").append("<button class=\"page-link secondary\" onclick=\"loadBugs(currentPage + 1)\" id=\"nextPage\">Next</button>");
+
+            $("#prevPage").prop("disabled", data.number === 0);
+            $("#nextPage").prop("disabled", data.number + 1 === data.totalPages);
         }).fail(function () {
             alert("Failed to load bugs. Please try again.");
         });
@@ -191,5 +223,6 @@
         loadBugs();
     }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 </html>

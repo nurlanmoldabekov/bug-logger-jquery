@@ -3,6 +3,7 @@ package com.bet99.bet99test.repository;
 import com.bet99.bet99test.entity.Bug;
 import com.bet99.bet99test.entity.enums.Severity;
 import com.bet99.bet99test.entity.enums.Status;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,7 +20,7 @@ public interface BugRepository extends JpaRepository<Bug, Long> {
             (:severity IS NULL OR b.severity = :severity) AND
             (:status IS NULL OR b.status = :status)
             """)
-    List<Bug> findAllWithFilter(String query,
+    Page<Bug> findAllWithFilter(String query,
                                 Severity severity,
                                 Status status,
                                 Pageable pageable);
