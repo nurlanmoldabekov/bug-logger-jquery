@@ -23,7 +23,7 @@
             <form id="bugForm" class="card p-3 shadow-sm">
                 <div class="mb-3">
                     <label for="bugTitle" class="form-label">Title</label>
-                    <input type="text" class="form-control" id="bugTitle" name="bugTitle" placeholder="Enter bugEntity title">
+                    <input type="text" class="form-control" id="bugTitle" name="bugTitle" placeholder="Enter bug title">
                     <div id="titleError" class="text-danger"></div>
                 </div>
                 <div class="mb-3">
