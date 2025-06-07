@@ -2,9 +2,16 @@ package com.bet99.bet99test;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class Bet99TestApplication {
+public class Bet99TestApplication extends SpringBootServletInitializer {
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return builder.sources(Bet99TestApplication.class);
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(Bet99TestApplication.class, args);

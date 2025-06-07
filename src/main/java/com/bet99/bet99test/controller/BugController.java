@@ -24,7 +24,7 @@ public class BugController {
 
     @GetMapping("/")
     public String home() {
-        return "bug";
+        return "index";
     }
 
     @ResponseBody

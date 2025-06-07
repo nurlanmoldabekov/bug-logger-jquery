@@ -1,14 +1,22 @@
-# Use an OpenJDK base image
-FROM openjdk:17-jdk-slim
+# Stage 1: Build WAR
+FROM maven:3.9.6-eclipse-temurin-17 as builder
 
-# Set the working directory inside the container
 WORKDIR /app
+COPY . .
 
-# Copy the Maven build artifact (JAR file) into the container
-COPY ./target/bet99-test-0.0.1-SNAPSHOT.jar app.jar
+RUN mvn clean package -DskipTests
 
-# Expose the port your Spring Boot application runs on
+FROM tomcat:9.0-jdk17
+LABEL maintainer="nurlanmoldabekov"
+
+# Remove default ROOT application
+RUN rm -rf /usr/local/tomcat/webapps/ROOT
+
+# Copy the WAR file to the Tomcat webapps directory
+COPY target/ROOT.war /usr/local/tomcat/webapps/ROOT.war
+
+# Expose port 8080
 EXPOSE 8080
 
-# Run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Start Tomcat
+CMD ["catalina.sh", "run"]
