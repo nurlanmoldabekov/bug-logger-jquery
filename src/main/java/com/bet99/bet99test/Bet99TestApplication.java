@@ -7,7 +7,6 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 @SpringBootApplication
 public class Bet99TestApplication extends SpringBootServletInitializer {
-
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return builder.sources(Bet99TestApplication.class);
@@ -16,5 +15,4 @@ public class Bet99TestApplication extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication.run(Bet99TestApplication.class, args);
     }
-
 }

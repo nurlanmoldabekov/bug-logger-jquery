@@ -1,31 +1,31 @@
 version: '3.8'
 
 services:
-#  app:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    container_name: bet99-app-container
-#    ports:
-#      - "8080:8080"
-#    environment:
-#      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/bugdb
-#      SPRING_DATASOURCE_USERNAME: buguser
-#      SPRING_DATASOURCE_PASSWORD: bugpassword
-#    depends_on:
-#      - mysql
-  springboot-app:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: bet99-app-container
     ports:
       - "8080:8080"
     environment:
-      DB_HOST: mysql
-      DB_PORT: 3306
-      DB_NAME: bugdb
-      DB_USERNAME: buguser
-      DB_PASSWORD: bugpassword
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/bugdb
+      SPRING_DATASOURCE_USERNAME: buguser
+      SPRING_DATASOURCE_PASSWORD: bugpassword
+    depends_on:
+      - mysql
+#  springboot-app:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      DB_HOST: mysql
+#      DB_PORT: 3306
+#      DB_NAME: bugdb
+#      DB_USERNAME: buguser
+#      DB_PASSWORD: bugpassword
   mysql:
     image: mysql:8.0
     container_name: bet99-mysql-container
