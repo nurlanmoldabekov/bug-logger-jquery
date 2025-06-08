@@ -121,18 +121,37 @@
 
 <!-- Modal -->
 <div class="modal fade" id="bugDetailModal" tabindex="-1" aria-labelledby="bugDetailModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="bugDetailModalLabel">Bug Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="bugDetailModalLabel">
+                    <i class="bi bi-bug-fill me-2"></i>Bug Details
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <p><strong>ID:</strong> <span id="modalBugId"></span></p>
-                <p><strong>Title:</strong> <span id="modalBugTitle"></span></p>
-                <p><strong>Description:</strong> <textarea disabled rows="3" id="modalBugDescription"></textarea></p>
-                <p><strong>Severity:</strong> <span id="modalBugSeverity"></span></p>
-                <p><strong>Status:</strong> <span id="modalBugStatus"></span></p>
+            <div class="modal-body px-4 py-3">
+                <div class="mb-3">
+                    <label class="form-label"><strong>ID:</strong></label>
+                    <div id="modalBugId" class="form-control bg-light"></div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label"><strong>Title:</strong></label>
+                    <div id="modalBugTitle" class="form-control bg-light"></div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label"><strong>Description:</strong></label>
+                    <textarea class="form-control bg-light" rows="4" id="modalBugDescription" disabled></textarea>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label"><strong>Severity:</strong></label>
+                        <div id="modalBugSeverity" class="form-control bg-light"></div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label"><strong>Status:</strong></label>
+                        <div id="modalBugStatus" class="form-control bg-light"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
