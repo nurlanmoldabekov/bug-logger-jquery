@@ -23,12 +23,12 @@
             <form id="bugForm" class="card p-3 shadow-sm">
                 <div class="mb-3">
                     <label for="bugTitle" class="form-label">Title</label>
-                    <input type="text" class="form-control" id="bugTitle" name="bugTitle" placeholder="Enter bug title">
+                    <input type="text" maxlength="50" class="form-control" id="bugTitle" name="bugTitle" placeholder="Enter bug title">
                     <div id="titleError" class="text-danger"></div>
                 </div>
                 <div class="mb-3">
                     <label for="description" class="form-label">Description</label>
-                    <input type="text" class="form-control" id="description" name="description" placeholder="Enter description">
+                    <textarea class="form-control" maxlength="255" id="description" name="description" placeholder="Enter description" rows="3"></textarea>
                     <div id="descriptionError" class="text-danger"></div>
                 </div>
                 <div class="mb-3">
@@ -119,6 +119,25 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="bugDetailModal" tabindex="-1" aria-labelledby="bugDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bugDetailModalLabel">Bug Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>ID:</strong> <span id="modalBugId"></span></p>
+                <p><strong>Title:</strong> <span id="modalBugTitle"></span></p>
+                <p><strong>Description:</strong> <textarea disabled rows="3" id="modalBugDescription"></textarea></p>
+                <p><strong>Severity:</strong> <span id="modalBugSeverity"></span></p>
+                <p><strong>Status:</strong> <span id="modalBugStatus"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 
     String.prototype.compose = (function () {
@@ -203,17 +222,29 @@
             let rows = "";
             var row = '<tr>' +
                 '<td>{{id}}</td>' +
-                '<td>{{bugTitle}}</td>' +
-                '<td>{{description}}</td>' +
+                '<td><a href="#" class="bug-title" data-id="{{id}}" data-title="{{fullTitle}}" data-full-description="{{fullDescription}}" data-severity="{{severity}}" data-status="{{status}}">{{bugTitle}}</a></td>' +
+                '<td>{{shortDescription}}</td>' +
                 '<td>{{severity}}</td>' +
                 '<td>{{status}}</td>' +
                 '</tr>';
 
             data.content.forEach(bugEntity => {
+                let fullDescription = bugEntity.description;
+                let shortDescription = fullDescription.length > 10
+                    ? fullDescription.substring(0, 10) + "..."
+                    : fullDescription;
+
+                let fullTitle = bugEntity.bugTitle;
+                let shortTitle = fullTitle.length > 10
+                    ? fullTitle.substring(0, 10) + "..."
+                    : fullTitle;
+
                 rows += row.compose({
                     'id': bugEntity.id,
-                    'bugTitle': bugEntity.bugTitle,
-                    'description': bugEntity.description,
+                    'bugTitle': shortTitle,
+                    'fullTitle': fullTitle,
+                    'shortDescription': shortDescription,
+                    'fullDescription': fullDescription,
                     'severity': bugEntity.severity,
                     'status': bugEntity.status
                 });
@@ -247,6 +278,18 @@
         $("#statusFilter").val("");
         loadBugs();
     }
+
+    $("#bugTable").on("click", ".bug-title", function (e) {
+        e.preventDefault();
+        $("#modalBugId").text($(this).data("id"));
+        $("#modalBugTitle").text($(this).data("title"));
+        $("#modalBugDescription").text($(this).data("full-description"));
+        $("#modalBugSeverity").text($(this).data("severity"));
+        $("#modalBugStatus").text($(this).data("status"));
+
+        let modal = new bootstrap.Modal(document.getElementById('bugDetailModal'));
+        modal.show();
+    });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
